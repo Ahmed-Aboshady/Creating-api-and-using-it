@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap.js"></script>
+</head>
+
+<body>
+    <h1 style="text-align:center">Course</h1>
+    <div class="container">
+        <div class="table-responsive" <br/>
+     <div style="text-align:center">
+            <label>ID:   </label>
+            <input type="text" id="crsid" /><br />
+            <label>Name:</label> <input type="text" id="crsname" /><br />
+            <label>Duration:</label><input type="text" id="crsdur" /><br />
+            <input type="button" onclick="add()" value="Add" />
+        </div>
+        <table class="table table-bordered table-striped" id="list_table_json">
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Duration</th>
+            </tr>
+
+        </table>
+    </div>
+    </div>
+    <script src="Scripts/jquery-3.5.1.js"></script>
+    <script>
+    function add() {
+       var o = {
+           Crs_Id: $("#crsid").val(),
+           Crs_Name: $("#crsname").val(),
+           Crs_Duration: $("#crsdur").val(),
+           Top_Id: 3
+       }
+       $.ajax({
+           url: 'http://localhost:52302/api/test',
+           method: 'POST',
+           data: JSON.stringify(o),
+           contentType: 'application/json',
+           success: function (data) {
+               alert(JSON.stringify(data))
+                   // $("#list_table_json").prepend(o);
+
+           },
+           error: function (er) {
+               alert(er.status)
+           }
+
+       })
+   }
+        $(document).ready(function () {
+            $.ajax({
+                url: 'http://localhost:52302/api/test',
+                method: 'GET',
+                success: function (data) {
+                    // alert(JSON.stringify(data));
+                    var course_data = '';
+                    $.each(data, function (index, value) {
+                        course_data += '<tr>';
+                        course_data += '<td>' + value.id + '</td>';
+                        course_data += '<td>' + value.name + '</td>';
+                        course_data += '<td>' + value.duration + '</td>';
+                        course_data += '</tr>';
+                    });
+                    $("#list_table_json").append(course_data);
+                },
+                error: function (r) {
+                    alert("error")
+                }
+            })
+        })
+
+    </script>
+</body>
+
+</html>
